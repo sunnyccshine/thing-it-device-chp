@@ -3,7 +3,7 @@
 [![NPM](https://nodei.co/npm/thing-it-device-chp.png)](https://nodei.co/npm/thing-it-device-chp/)
 [![NPM](https://nodei.co/npm-dl/thing-it-device-chp.png)](https://nodei.co/npm/thing-it-device-chp/)
 
-[thing-it-node] Device Plugin for a generic Combined Heat and Power Unit (CHP) as a demo for CoGen Power Generation. Manufacturers of WTGs may use this as an example to implement
+[thing-it-node] Device Plugin for a generic Combined Heat and Power Unit (CHP) as a demo for CoGen Power Generation. Manufacturers of CHPs may use this as an example to implement
 a [thing-it-node] Device Plugin for their CHP products.
 
 ## Installation
