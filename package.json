@@ -1,0 +1,21 @@
+{
+  "name": "thing-it-device-chp",
+  "version": "0.0.1",
+  "description": "[thing-it-node] Device Plugin to demo Combined Heat and Power operations.",
+  "authors": "Marc Gille",
+  "keywords": [
+    "CoGen",
+    "CHP",
+    "Energy",
+    "Sustainability"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcgille/thing-it-device-chp"
+  },
+  "dependencies": {
+    "lodash": "^4.1.0",
+    "q": "^1.4.1",
+    "thing-it-test": "0.0.15"
+  }
+}
