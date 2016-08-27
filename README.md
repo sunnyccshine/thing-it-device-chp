@@ -56,7 +56,7 @@ Install the **thing-it Mobile App** from the Apple Appstore or Google Play and s
 locally as described [here](https://thing-it.com/thing-it/#/documentationPanel/mobileClient/connectionModes) or just connect your browser under 
 [http://localhost:3001](http://localhost:3001) to check how the Mobile UI would look like.
 
-The following screenshot shows the Node Page of the [sample configuration]("./examples.configuration") with the Mobile UI to monitor and control the WTG:
+The following screenshot shows the Node Page of the [sample configuration]("./examples.configuration") with the Mobile UI to monitor and control the CHP:
 
 <p align="center"><a href="./documentation/images/mobile-ui.png"><img src="./documentation/images/mobile-ui.png" width="70%" height="70%"></a></p>
 
