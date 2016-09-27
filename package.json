@@ -1,6 +1,6 @@
 {
   "name": "thing-it-device-chp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "[thing-it-node] Device Plugin to demo Combined Heat and Power operations.",
   "authors": "Marc Gille",
   "keywords": [

@@ -28,20 +28,8 @@ module.exports = {
                 id: "decimal"
             }
         }, {
-            id: "heatOutput",
-            label: "Heat Output",
-            type: {
-                id: "decimal"
-            }
-        }, {
             id: "exhaustTemperature",
-            label: "Exhaust Temeperature",
-            type: {
-                id: "decimal"
-            }
-        }, {
-            id: "coolingWaterTemperature",
-            label: "Cooling Water Temperature",
+            label: "Exhaust Temperature",
             type: {
                 id: "decimal"
             }
@@ -51,6 +39,12 @@ module.exports = {
         },
             {
                 id: "shutdown", label: "Shutdown", parameters: []
+            },
+            {
+                id: "increaseGasConsumption", label: "Increase Gas Consumption", parameters: []
+            }, ,
+            {
+                id: "decreaseGasConsumption", label: "Decrease Gas Consumption", parameters: []
             }],
         configuration: []
     },
@@ -96,27 +90,14 @@ function Chp() {
 
         this.state = {};
 
+        this.state.power = 0;
+        this.state.gasConsumption = 0;
+        this.state.drive = 0;
+        this.state.heatOutput = 0;
+        this.state.exhaustTemperature = 0;
+        this.state.coolingWaterTemperature = 0;
+
         if (this.isSimulated()) {
-            this.interval = setInterval(function () {
-                if (this.state.running) {
-                    this.state.power = 400 + 0.1 * new Date().getTime() % 2;
-                    this.state.gasConsumption = 134 + new Date().getTime() % 10;
-                    this.state.drive = 1500 - 0.1 * new Date().getTime() % 2;
-                    this.state.heatOutput = 314 + 5 * new Date().getTime() % 20;
-                    this.state.exhaustTemperature = 106 + 0.1 * new Date().getTime() % 2;
-                    this.state.coolingWaterTemperature = 88 + 0.1 * new Date().getTime() % 2;
-                } else {
-                    this.state.power = 0;
-                    this.state.gasConsumption = 0;
-                    this.state.drive = 0;
-                    this.state.heatOutput = 0;
-                    this.state.exhaustTemperature = 0;
-                    this.state.coolingWaterTemperature = 0;
-                }
-
-                this.publishStateChange();
-            }.bind(this), 10000);
-
             this.statusChangeInterval = setInterval(function () {
                 if (new Date().getTime() % 2) {
                     this.publishEvent('6.1', {details: 'Lubricant empty'});
@@ -158,6 +139,7 @@ function Chp() {
      */
     Chp.prototype.shutdown = function () {
         this.state.running = false;
+        this.state.gasConsumption = 0;
         this.state.power = 0;
         this.state.idlePower = 0;
 
@@ -169,9 +151,11 @@ function Chp() {
      */
     Chp.prototype.activate = function () {
         this.state.running = true;
-        this.state.power = 10 + 0.1 * new Date().getTime() % 2;
-        this.state.idlePower = 0.1 * this.state.power;
+        this.state.exhaustTemperature = 0;
+        this.state.power = 0;
+        this.state.idlePower = 0;
 
+        this.setState({gasConsumption: 10});
         this.publishStateChange();
     };
 
@@ -185,7 +169,45 @@ function Chp() {
     /**
      *
      */
-    Chp.prototype.setState = function () {
+    Chp.prototype.setState = function (state) {
+        for (var n in state) {
+            if (n == 'gasConsumption') {
+                this.state[n] = state[n];
+
+                var t = 1;
+                var exhaustTemperatureStart = state.exhaustTemperature;
+                var exhaustTemperatureEnd = this.state[n] * 10;
+                var driveStart = this.state.drive;
+                var driveEnd = this.state[n] * 100;
+                var powerStart = this.state.power;
+                var powerEnd = this.state[n] * 1000;
+
+                var interval = setInterval(function () {
+                    if (t == 11) {
+                        clearInterval(interval);
+                    } else {
+                        this.state.drive += (driveEnd - driveStart) / 10 * t;
+                        this.state.power += (powerEnd - powerStart) / 10 * t;
+
+                        this.publishStateChange();
+                    }
+                }.bind(this), 1000);
+            }
+        }
+    };
+
+    /**
+     *
+     */
+    Chp.prototype.increaseGasConsumption = function () {
+        this.setState({gasConsumption: this.state.gasConsumption + 10});
+    };
+
+    /**
+     *
+     */
+    Chp.prototype.decreaseGasConsumption = function () {
+        this.setState({gasConsumption: Math.max(0, this.state.gasConsumption - 10)});
     };
 }
 
