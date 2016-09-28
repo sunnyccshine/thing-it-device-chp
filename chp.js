@@ -170,29 +170,46 @@ function Chp() {
      *
      */
     Chp.prototype.setState = function (state) {
-        for (var n in state) {
-            if (n == 'gasConsumption') {
-                this.state[n] = state[n];
+        // Only allow changes of gas consumption
 
-                var t = 1;
-                var exhaustTemperatureStart = state.exhaustTemperature;
-                var exhaustTemperatureEnd = this.state[n] * 10;
-                var driveStart = this.state.drive;
-                var driveEnd = this.state[n] * 100;
-                var powerStart = this.state.power;
-                var powerEnd = this.state[n] * 1000;
-
-                var interval = setInterval(function () {
-                    if (t == 11) {
-                        clearInterval(interval);
-                    } else {
-                        this.state.drive += (driveEnd - driveStart) / 10 * t;
-                        this.state.power += (powerEnd - powerStart) / 10 * t;
-
-                        this.publishStateChange();
-                    }
-                }.bind(this), 1000);
+        if (state.gasConsumption) {
+            if (this.__timeout) {
+                return;
             }
+
+            this.__timeout = setTimeout(function () {
+                if (this.__lastGasConsumption == undefined) {
+                    this.__lastGasConsumption = state.gasConsumption;
+                }
+
+                // Do not allow gas consumption above 100 or below 0
+
+                state.gasConsumption = Math.max(0, state.gasConsumption, Math.min(100, state.gasConsumption));
+
+                this.logDebug('Set Gas Consumption: ', state.gasConsumption);
+
+                var delta = Math.abs((this.state.gasConsumption - state.gasConsumption) / state.gasConsumption);
+
+                // Changes under 0.1% are not applied
+
+                if (delta < 0.001) {
+                    return;
+                }
+
+                this.state.gasConsumption = state.gasConsumption;
+
+                this.state.drive += 100 * state.gasConsumption - 0.1 * this.__lastDrive;
+                this.state.power += 30 * state.gasConsumption - 0.2 * this.__lastPower;
+
+                this.logDebug('Set Drive: ', this.state.drive);
+                this.logDebug('Set Power: ', this.state.power);
+
+                this.__lastDrive = this.state.drive;
+                this.__lastPower = this.state.power;
+                this.__timeout = null;
+
+                this.publishStateChange();
+            }.bind(this), 1000);
         }
     };
 
