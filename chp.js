@@ -42,7 +42,7 @@ module.exports = {
             },
             {
                 id: "increaseGasConsumption", label: "Increase Gas Consumption", parameters: []
-            }, ,
+            },
             {
                 id: "decreaseGasConsumption", label: "Decrease Gas Consumption", parameters: []
             }],
