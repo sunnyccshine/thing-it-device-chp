@@ -1,5 +1,5 @@
 {
-  "name": "thing-it-device-chp",
+  "name": "@thing-it/device-chp",
   "version": "0.0.14",
   "description": "[thing-it-node] Device Plugin to demo Combined Heat and Power operations.",
   "authors": "Marc Gille",
@@ -9,9 +9,12 @@
     "Energy",
     "Sustainability"
   ],
+  "scripts": {
+    "postversion": "git push && git push --tags && npm publish"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/marcgille/thing-it-device-chp"
+    "url": "https://github.com/thing-it/thing-it-device-chp"
   },
   "dependencies": {
     "lodash": "^4.1.0",
