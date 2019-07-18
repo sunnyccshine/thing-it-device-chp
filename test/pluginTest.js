@@ -6,7 +6,7 @@ describe('[thing-it] CHP', function () {
     before(function () {
         testDriver = require("thing-it-test").createTestDriver({logLevel: "debug"});
 
-        testDriver.registerDevicePlugin(__dirname + "/../chp");
+        testDriver.registerDevicePlugin('chp', __dirname + "/../chp");
     });
     describe('Start Configuration', function () {
         it('should complete without error', function () {

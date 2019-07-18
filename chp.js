@@ -88,6 +88,12 @@ function Chp() {
     Chp.prototype.start = function () {
         var deferred = q.defer();
 
+        this.operationalState = {
+            status: 'PENDING',
+            message: 'Waiting for initialization...'
+        };
+        this.publishOperationalStateChange();
+
         this.state = {};
 
         this.state.power = 0;
@@ -108,9 +114,20 @@ function Chp() {
                 }
             }.bind(this), 20000);
 
+            this.operationalState = {
+                status: 'OK',
+                message: 'Generic CHP successfully initialized'
+            }
+            this.publishOperationalStateChange();
+
             deferred.resolve();
         } else {
 
+            this.operationalState = {
+                status: 'OK',
+                message: 'Generic CHP successfully initialized'
+            }
+            this.publishOperationalStateChange();
             deferred.resolve();
         }
 
